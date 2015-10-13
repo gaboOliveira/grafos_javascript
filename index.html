@@ -16,6 +16,13 @@
 				<input type="button" id="inserirVertice" value="Add">
 			</div>
 
+			<div class="parte" id="remover">
+				<label>Remover Vértice</label>
+				<br />
+				<select name="vertices"></select>
+				<input type="button" id="removerVertice" value="Remover">
+			</div>
+
 			<div class="parte" id="arestas">
 				<label>Inserir Aresta</label>
 				<br />
@@ -90,7 +97,7 @@
 	var adjacentes = '';
 	var adjacentesStart = '';
 
-	$('#arestas, #existencia, #adjacentes, #grau, #obterGraus, #euler, #incidencias').hide();
+	$('#arestas, #existencia, #adjacentes, #grau, #obterGraus, #euler, #incidencias, #remover').hide();
 
 	$('#inserirVertice').on('click', function() {
 		clearVariables();
@@ -109,7 +116,31 @@
 			texto = nextChar(texto);
 		}
 
-		$('#arestas, #existencia, #adjacentes, #grau, #obterGraus, #euler, #incidencias').show();
+		$('#arestas, #existencia, #adjacentes, #grau, #obterGraus, #euler, #incidencias, #remover').show();
+	});
+
+	$('#removerVertice').on('click', function() {
+		clearVariables();
+
+		var verificacaoArestas = arestas.split(',');
+		
+		for (var c = 0; c < (verificacaoArestas.length - 1); c++) {
+			var partes = verificacaoArestas[c].split('.');
+			var vertice = $('#remover select[name="vertices"]').val();
+			
+			if (partes[0] == vertice || partes[1] == vertice){
+				var find = verificacaoArestas[c] + ',';
+				var re = new RegExp(find, 'g');
+				arestas = arestas.replace(re, '');
+			}
+		}
+
+		vertices--;
+
+		if (vertices == 0)
+			$('#arestas, #existencia, #adjacentes, #grau, #obterGraus, #euler, #incidencias, #remover').hide();
+
+		gerarGrafo();
 	});
 
 	$('#inserirAresta').on('click', function() {
@@ -272,7 +303,6 @@
         var Y = new Array(N);
 
         var texto = 'A';
-        console.clear();
 
         for (var i = 0; i < N; i++) {
 
