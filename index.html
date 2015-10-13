@@ -11,9 +11,22 @@
 		<div id="dados">
 
 			<div class="parte">
+				<label for="dinamico">Inclusão dinâmica</label>
+				<input type="radio" name="tipoInclusao" value="0" checked>
+				<label for="arquivo">Arquivo</label>
+				<input type="radio" name="tipoInclusao" value="1">
+			</div>
+
+			<div class="parte" id="dinamico">
 				<label for="inserirVertice">Inserir vértice</label>
 				<br />
 				<input type="button" id="inserirVertice" value="Add">
+			</div>
+
+			<div class="parte" id="arquivo">
+				<label for="inserirArquivo">Inserir arquivo</label>
+				<br />
+				<input type="file" id="inserirArquivo" value="Add" onchange="pegaArquivo(this)">
 			</div>
 
 			<div class="parte requisito" id="remover">
@@ -107,7 +120,17 @@
 	var adjacentes = '';
 	var adjacentesStart = '';
 
-	$('.requisito').hide();
+	$('.requisito, #arquivo').hide();
+
+	$('input[name="tipoInclusao"]').on('change', function() {
+		if ($(this).val() == 0) {
+			$('#arquivo').hide();
+			$('#dinamico').show();
+		}else {
+			$('#arquivo').show();
+			$('#dinamico').hide();
+		}
+	});
 
 	$('#inserirVertice').on('click', function() {
 		clearVariables();
@@ -520,6 +543,57 @@
 		'</table>';
 		
 		$('#incidencias').append(retorno);
+	}
+
+	var leitor = new FileReader();
+
+	window.onload = function init() {
+		leitor.onload = lerArquivo;
+	}
+
+	function pegaArquivo(inputFile) {
+		var file = inputFile.files[0];
+	 	leitor.readAsText(file);
+	}
+
+	function lerArquivo(evt) {
+		var linhas = evt.target.result.split('\n');
+		
+		if (linhas.length > 2) {
+			alert('Arquivo mal formatado!');
+		}else {
+			if (linhas.length > 1) {
+				if (!$.isNumeric(linhas[0])){
+					alert('Número de vértices não encontrado!');
+					return;
+				}else
+					vertices = linhas[0]
+
+				var verificacaoArestas = linhas[1].split(',');
+				
+				for (var i = 0; i < (verificacaoArestas.length - 1); i++) {
+					var verificacaoVertices = verificacaoArestas[i].split('.');
+					
+					if (verificacaoVertices.length != 2) { 
+						alert('Vertice ' + verificacaoArestas[i] + ' mal formatado');
+						return;
+					}else {
+						if (!$.isNumeric(verificacaoVertices[0]) || !$.isNumeric(verificacaoVertices[1])) {
+							alert('Vertice ' + verificacaoArestas[i] + ' mal formatado');
+							return;
+						} else {
+							if ((verificacaoVertices[0] < 0 || verificacaoVertices[0] > (vertices - 1)) || (verificacaoVertices[1] < 0 || verificacaoVertices[1] > (vertices - 1))) {
+								alert('Vertice ' + verificacaoArestas[i] + ' mal formatado');
+								return;
+							}else{
+								arestas = linhas[1];
+								gerarGrafo();
+							}
+						}
+					}
+				}
+			}
+		}
 	}
           
 </script>
