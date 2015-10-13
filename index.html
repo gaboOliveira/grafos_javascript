@@ -16,15 +16,15 @@
 				<input type="button" id="inserirVertice" value="Add">
 			</div>
 
-			<div class="parte" id="remover">
+			<div class="parte requisito" id="remover">
 				<label>Remover Vértice</label>
 				<br />
 				<select name="vertices"></select>
 				<input type="button" id="removerVertice" value="Remover">
 			</div>
 
-			<div class="parte" id="arestas">
-				<label>Inserir Aresta</label>
+			<div class="parte requisito" id="arestas">
+				<label>Inserir Aresta entre os vértices</label>
 				<br />
 				<label for="aresta1" id="aresta1">Aresta 1</label>
 				<select name="aresta1"></select>
@@ -33,7 +33,17 @@
 				<input type="button" id="inserirAresta" value="Add">
 			</div>
 
-			<div class="parte" id="existencia">
+			<div class="parte requisito" id="removerArestas">
+				<label>Remover Aresta entre os vértices</label>
+				<br />
+				<label for="aresta1" id="aresta1">Aresta 1</label>
+				<select name="aresta1"></select>
+				<label for="aresta2">Aresta 2</label>
+				<select name="aresta2" id="aresta2"></select>
+				<input type="button" id="remvoerAresta" value="Remover">
+			</div>
+
+			<div class="parte requisito" id="existencia">
 				<label>Verificar aresta entre dois vértices</label>
 				<br />
 				<label for="aresta1" id="aresta1">Aresta 1</label>
@@ -43,33 +53,33 @@
 				<input type="button" id="verificarExistencia" value="Verificar">
 			</div>
 
-			<div class="parte" id="adjacentes">
+			<div class="parte requisito" id="adjacentes">
 				<label>Vértices adjacentes</label>
 				<br />
 				<select name="vertices"></select>
 				<input type="button" id="verificarAdjacentes" value="Verificar">
 			</div>
 
-			<div class="parte" id="grau">
+			<div class="parte requisito" id="grau">
 				<label>Verificar grau do vértice</label>
 				<br />
 				<select name="vertices"></select>
 				<input type="button" id="verificarGrau" value="Verificar">
 			</div>
 
-			<div class="parte" id="obterGraus">
+			<div class="parte requisito" id="obterGraus">
 				<label>Obter graus</label>
 				<br />
 				<input type="button" id="verificarGraus" value="Verificar">
 			</div>
 
-			<div class="parte" id="euler">
+			<div class="parte requisito" id="euler">
 				<label>Verificar caminho de Euler</label>
 				<br />
 				<input type="button" id="verificarEuler" value="Verificar">
 			</div>
 
-			<div class="parte" id="incidencias">
+			<div class="parte requisito" id="incidencias">
 				<label>Matriz de incidências</label>
 				<br />
 				<input type="button" id="gerarMatriz" value="Gerar">
@@ -97,7 +107,7 @@
 	var adjacentes = '';
 	var adjacentesStart = '';
 
-	$('#arestas, #existencia, #adjacentes, #grau, #obterGraus, #euler, #incidencias, #remover').hide();
+	$('.requisito').hide();
 
 	$('#inserirVertice').on('click', function() {
 		clearVariables();
@@ -116,7 +126,7 @@
 			texto = nextChar(texto);
 		}
 
-		$('#arestas, #existencia, #adjacentes, #grau, #obterGraus, #euler, #incidencias, #remover').show();
+		$('.requisito').show();
 	});
 
 	$('#removerVertice').on('click', function() {
@@ -138,7 +148,7 @@
 		vertices--;
 
 		if (vertices == 0)
-			$('#arestas, #existencia, #adjacentes, #grau, #obterGraus, #euler, #incidencias, #remover').hide();
+			$('.requisito').hide();
 
 		gerarGrafo();
 	});
@@ -154,6 +164,26 @@
 		} else
 			alert('Aresta já existe no grafo');
 		
+	});
+
+	$('#remvoerAresta').on('click', function() {
+		clearVariables();
+
+		var vertice1 = $('#removerArestas select[name="aresta1"]').val();
+		var vertice2 = $('#removerArestas select[name="aresta2"]').val();
+
+		var aresta1 = vertice1 + '.' + vertice2;
+		var aresta2 = vertice2 + '.' + vertice1;
+
+		var find = aresta1 + ',';
+		var re = new RegExp(find, 'g');
+		arestas = arestas.replace(re, '');
+
+		var find = aresta2 + ',';
+		var re = new RegExp(find, 'g');
+		arestas = arestas.replace(re, '');
+
+		gerarGrafo();
 	});
 
 	$('#verificarExistencia').on('click', function() {
