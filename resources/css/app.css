@@ -1,0 +1,25 @@
+#dados {
+	float: left;
+}
+
+.parte {
+	width: 300px;
+	border: 1px solid;
+	margin-bottom: 20px;
+}
+
+.clear {
+	clear: both;
+}
+
+.plotagem {
+	width: 1000;
+	height: 500;
+	float: left;
+	margin-left: 20px;
+	border: 1px solid black;
+}
+
+#infos {
+	float: left;
+}
