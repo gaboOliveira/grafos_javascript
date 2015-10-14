@@ -93,9 +93,7 @@
 			</div>
 
 			<div class="parte requisito" id="incidencias">
-				<label>Matriz de incidências</label>
-				<br />
-				<input type="button" id="gerarMatriz" value="Gerar">
+				<label>Matriz de Adjacências</label>
 			</div>
 
 			<div class="parte requisito" id="conexo">
@@ -174,9 +172,9 @@
 		euler();
 	});
 
-	$('#gerarMatriz').on('click', function() {
+	/*$('#gerarMatriz').on('click', function() {
 		matriz();
-	});
+	});*/
 
 	$('#verificarGrafoConexo').on('click', function() {
 		verificarGrafoConexo(false);
@@ -312,13 +310,13 @@
         			$("canvas").rotateCanvas({
 						rotate: 135,
 						x: X[plotagemVertices[0]], 
-						y: (Y[plotagemVertices[0]] - (k * 5))
+						y: Y[plotagemVertices[0]] - 5
                     }).drawArc({
                         strokeStyle: cor,
                         strokeWidth: 1,
                         x: X[plotagemVertices[0]], 
-                        y: (Y[plotagemVertices[0]] - (k * 5)),
-                        radius: 17,
+                        y: Y[plotagemVertices[0]] - 5,
+                        radius: 15,
                         start: 90, 
                         end: 1
                     }).restoreCanvas();
@@ -477,6 +475,7 @@
 								return;
 							}else{
 								arestas = linhas[1];
+								matriz();
 								gerarGrafo();
 							}
 						}
@@ -517,6 +516,7 @@
 		}
 
 		$('.requisito').show();
+		matriz();
 	}
 
 	function inserirAresta(vertice1, vertice2) {
@@ -529,6 +529,8 @@
 			gerarGrafo();
 		} else
 			alert('Aresta já existe no grafo');
+
+		matriz();
 	}
 
 	function removerVertice(vertice) {
@@ -552,6 +554,8 @@
 			$('.requisito').hide();
 
 		gerarGrafo();
+
+		matriz();
 	}
 
 	function removerAresta(vertice1, vertice2) {
@@ -569,6 +573,8 @@
 		arestas = arestas.replace(re, '');
 
 		gerarGrafo();
+
+		matriz();
 	}
 
 	function verificarExistencia(vertice1, vertice2) {
@@ -659,15 +665,12 @@
 	}
 
 	function buscaFrofunda(vertice) {
-		console.log(vertice);
 		visitados[vertice] = true;
 
 		var adjacencias = verificarAdjacentes(vertice, true);
 		adjacencias = adjacencias.split(',');
-		console.log(adjacencias);
-		console.log(visitados);
+		
 		for (var i = 0; i < (adjacencias.length - 1); i++) {
-			console.log('Visitado ' + adjacencias[i] + ': ' + visitados[adjacencias[i]]);
 			if (!visitados[adjacencias[i]])
 				buscaFrofunda(adjacencias[i]);
 		}
