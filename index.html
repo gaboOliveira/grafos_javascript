@@ -12,6 +12,8 @@
 
 		<br />
 
+		<div id="alertas"></div>
+
 		<div class="panel-group col-lg-4" id="accordion" role="tablist" aria-multiselectable="true">
 			<div class="panel panel-default">
 				<div class="panel-heading" role="tab" id="headingOne">
@@ -218,8 +220,15 @@
 		if (arestas.indexOf(nome) < 0) {
 			arestas += nome + ',';
 			gerarGrafo();
-		} else
-			alert('Aresta já existe no grafo');
+		} else {
+			$('#alertas').html('');
+			var alerta = '' +
+				'<div class="alert alert-danger alert-dismissible" role="alert">'+
+					'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+					'<strong>Atenção!</strong> Aresta já existe no grafo'+
+				'</div>';
+			$('#alertas').html(alerta);
+		}
 
 		matriz();
 	}
@@ -271,9 +280,15 @@
 			existe = true;
 		}
 
-		if (!existe)
-			alert('Não existe aresta para os vértices pesquisados');
-		else
+		if (!existe) {
+			$('#alertas').html('');
+			var alerta = '' +
+				'<div class="alert alert-danger alert-dismissible" role="alert">'+
+					'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+					'<strong>Atenção!</strong> Não existe aresta para os vértices pesquisados'+
+				'</div>';
+			$('#alertas').html(alerta);
+		} else
 			gerarGrafo();
 	}
 
@@ -297,9 +312,15 @@
 		}
 
 		if (!inner) {
-			if (adjacentes == '') 
-				alert('Não existem vértices adjacentes');
-			else
+			if (adjacentes == '') {
+				$('#alertas').html('');
+				var alerta = '' +
+					'<div class="alert alert-danger alert-dismissible" role="alert">'+
+						'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+						'<strong>Atenção!</strong> Não existem vértices adjacentes'+
+					'</div>';
+				$('#alertas').html(alerta);
+			} else
 				gerarGrafo();
 		}else
 			return adjacentes;
@@ -322,7 +343,13 @@
 
 		var nome = $('select[name="vertices"] option[value="' + grauStart + '"]').text();
 
-		alert('O vértice ' + nome + ' possui grau ' + grau);
+		$('#alertas').html('');
+		var alerta = '' +
+			'<div class="alert alert-info alert-dismissible" role="alert">'+
+				'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+				'<strong>Atenção!</strong> O vértice ' + nome + ' possui grau ' + grau+
+			'</div>';
+		$('#alertas').html(alerta);
 	}
 
 	$('#verificarGraus').on('click', function() {
@@ -372,7 +399,13 @@
 		
 		grauMedio = grauMedio / $('select[name="vertices"] option').length;		
 
-		alert('Grau máximo: ' + grauMaximoNome + ' - ' + grauMaximo + '\r\nGrau mínimo: ' + grauMinimoNome + ' - ' + grauMinimo + '\r\nGrau médio: ' + grauMedio);
+		var alerta = '' +
+			'<div class="alert alert-info alert-dismissible" role="alert">'+
+				'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+				'<strong>Atenção!</strong> Grau máximo: ' + grauMaximoNome + ' - ' + grauMaximo + 
+					'\r\nGrau mínimo: ' + grauMinimoNome + ' - ' + grauMinimo + '\r\nGrau médio: ' + grauMedio +
+			'</div>';
+		$('#alertas').html(alerta);
 	}
 
 	$('#verificarEuler').on('click', function() {
@@ -384,9 +417,14 @@
 
 		var conexo = verificarGrafoConexo(true);
 
-		if (!conexo)
-			alert('Não existe caminho de Euler');
-		else {
+		if (!conexo) {
+			var alerta = '' +
+				'<div class="alert alert-danger alert-dismissible" role="alert">'+
+					'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+					'<strong>Atenção!</strong> Não existe caminho de Euler' +
+				'</div>';
+			$('#alertas').html(alerta);
+		} else {
 			var grausImpares = 0;
 
 			var verificacaoArestas = arestas.split(',');
@@ -402,10 +440,21 @@
 					grausImpares++;
 			});
 			
-			if (grausImpares == 0 || grausImpares == 2)
-				alert('Existe caminho de Euler');
-			else
-				alert('Não existe caminho de Euler');
+			if (grausImpares == 0 || grausImpares == 2) {
+				var alerta = '' +
+					'<div class="alert alert-success alert-dismissible" role="alert">'+
+						'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+						'<strong>Atenção!</strong> Existe caminho de Euler' +
+					'</div>';
+				$('#alertas').html(alerta);
+			} else {
+				var alerta = '' +
+					'<div class="alert alert-danger alert-dismissible" role="alert">'+
+						'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+						'<strong>Atenção!</strong> Não existe caminho de Euler' +
+					'</div>';
+				$('#alertas').html(alerta);
+			}
 		}
 	}
 
@@ -476,10 +525,21 @@
 		if (inner)
 			return conexo;
 		else{
-			if (conexo)
-				alert('Grafo conexo!')
-			else
-				alert('Grafo não conexo!')
+			if (conexo) {
+				var alerta = '' +
+					'<div class="alert alert-success alert-dismissible" role="alert">'+
+						'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+						'<strong>Atenção!</strong> Grafo conexo!' +
+					'</div>';
+				$('#alertas').html(alerta);
+			} else {
+				var alerta = '' +
+					'<div class="alert alert-danger alert-dismissible" role="alert">'+
+						'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+						'<strong>Atenção!</strong> Grafo não conexo!' +
+					'</div>';
+				$('#alertas').html(alerta);
+			}
 		}
 	}
 
@@ -496,6 +556,7 @@
 	}
 
 	function clearVariables() {
+		$('#alertas').html('');
 		verificacao = '';
 		adjacentesStart = '';
 		adjacentes = '';
@@ -639,14 +700,25 @@
 	}
 
 	function lerArquivo(evt) {
+		clearVariables();
 		var linhas = evt.target.result.split('\n');
 		
 		if (linhas.length > 2) {
-			alert('Arquivo mal formatado!');
+			var alerta = '' +
+				'<div class="alert alert-danger alert-dismissible" role="alert">'+
+					'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+					'<strong>Atenção!</strong> Arquivo mal formatado!' +
+				'</div>';
+			$('#alertas').html(alerta);
 		}else {
 			if (linhas.length > 1) {
 				if (!$.isNumeric(linhas[0])){
-					alert('Número de vértices não encontrado!');
+					var alerta = '' +
+						'<div class="alert alert-danger alert-dismissible" role="alert">'+
+							'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+							'<strong>Atenção!</strong> Número de vértices não encontrado!' +
+						'</div>';
+					$('#alertas').html(alerta);
 					return;
 				}else
 					vertices = linhas[0]
@@ -657,15 +729,30 @@
 					var verificacaoVertices = verificacaoArestas[i].split('.');
 					
 					if (verificacaoVertices.length != 2) { 
-						alert('Vertice ' + verificacaoArestas[i] + ' mal formatado');
+						var alerta = '' +
+							'<div class="alert alert-danger alert-dismissible" role="alert">'+
+								'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+								'<strong>Atenção!</strong> Vertice ' + verificacaoArestas[i] + ' mal formatado' +
+							'</div>';
+						$('#alertas').html(alerta);
 						return;
 					}else {
 						if (!$.isNumeric(verificacaoVertices[0]) || !$.isNumeric(verificacaoVertices[1])) {
-							alert('Vertice ' + verificacaoArestas[i] + ' mal formatado');
+							var alerta = '' +
+								'<div class="alert alert-danger alert-dismissible" role="alert">'+
+									'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+									'<strong>Atenção!</strong> Vertice ' + verificacaoArestas[i] + ' mal formatado' +
+								'</div>';
+							$('#alertas').html(alerta);
 							return;
 						} else {
 							if ((verificacaoVertices[0] < 0 || verificacaoVertices[0] > (vertices - 1)) || (verificacaoVertices[1] < 0 || verificacaoVertices[1] > (vertices - 1))) {
-								alert('Vertice ' + verificacaoArestas[i] + ' mal formatado');
+								var alerta = '' +
+									'<div class="alert alert-danger alert-dismissible" role="alert">'+
+										'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+										'<strong>Atenção!</strong> Vertice ' + verificacaoArestas[i] + ' mal formatado' +
+									'</div>';
+								$('#alertas').html(alerta);
 								return;
 							}else{
 								arestas = linhas[1];
