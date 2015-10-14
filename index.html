@@ -5,111 +5,135 @@
 		<link rel="stylesheet" type="text/css" href="resources/css/app.css">
 		<script type="text/javascript" src="resources/libraries/jquery.js"></script>
 		<script type="text/javascript" src="resources/libraries/jcanvas.js"></script>
+		<script src="resources/libraries/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+		<link href="resources/libraries/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
 	</head>
 	<body>
 
-		<div id="dados">
+		<br />
 
-			<div class="parte">
-				<label for="dinamico">Inclusão dinâmica</label>
-				<input type="radio" name="tipoInclusao" value="0" checked>
-				<label for="arquivo">Arquivo</label>
-				<input type="radio" name="tipoInclusao" value="1">
+		<div class="panel-group col-lg-4" id="accordion" role="tablist" aria-multiselectable="true">
+			<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="headingOne">
+					<h4 class="panel-title">
+						<a data-parent="#accordion">
+							Grafos
+						</a>
+					</h4>
+				</div>
 			</div>
-
-			<div class="parte" id="dinamico">
-				<label for="inserirVertice">Inserir vértice</label>
-				<br />
-				<input type="button" id="inserirVertice" value="Add">
+			<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="headingOne">
+					<h4 class="panel-title">
+						<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+							Vértice
+						</a>
+					</h4>
+				</div>
+				<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+					<div class="panel-body">
+						<div class="col-sm-1">
+							<input type="button" class="btn btn-primary" id="inserirVertice" value="Incluir">
+						</div>
+						<div class="clearfix"></div>
+						<div class="requisito">
+							<hr />
+							<div class="col-sm-3">
+								<label>Vértices:</label>
+								<select class="form-control" name="vertices"></select>
+							</div>
+							<div class="clearfix"></div>
+							<br />
+							<div class="col-sm-3">
+								<input class="btn btn-danger" type="button" id="removerVertice" value="Remover">
+							</div>
+							<div class="col-sm-4">
+								<input class="btn btn-info" type="button" id="verificarAdjacentes" value="Adjacências">
+							</div>
+							<div class="col-sm-3" style="margin-left: -13px;">
+								<input class="btn btn-warning" type="button" id="verificarGrau" value="Grau">
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
-
-			<div class="parte" id="arquivo">
-				<label for="inserirArquivo">Inserir arquivo</label>
-				<br />
-				<input type="file" id="inserirArquivo" value="Add" onchange="pegaArquivo(this)">
+			<div class="panel panel-default">
+				<div class="panel-heading" role="tab" id="headingThree">
+					<h4 class="panel-title">
+						<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">
+							Árquivo
+						</a>
+					</h4>
+				</div>
+				<div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+					<div class="panel-body">
+						<label>
+							<input type="file" id="inserirArquivo" value="Add" onchange="pegaArquivo(this)">
+						</label>
+					</div>
+				</div>
 			</div>
-
-			<div class="parte requisito" id="remover">
-				<label>Remover Vértice</label>
-				<br />
-				<select name="vertices"></select>
-				<input type="button" id="removerVertice" value="Remover">
+			<div class="panel panel-default requisito">
+				<div class="panel-heading" role="tab" id="headingTwo">
+					<h4 class="panel-title">
+						<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+							Aresta
+						</a>
+					</h4>
+				</div>
+				<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+					<div class="panel-body">
+						<div class="col-sm-3" style="margin-left: -16px;">
+							<label for="vertice1" id="vertice1">Vértice 1</label>
+							<select class="form-control" name="vertice1"></select>
+						</div>
+						<div class="col-sm-3">
+							<label for="vertice2">Vértice 2</label>
+							<select class="form-control" name="vertice2" id="vertice2"></select>
+						</div>
+						<div class="clearfix"></div>
+						<hr />
+						<div class="col-sm-4" style="margin-left: -16px;">
+							<input class="btn btn-primary" type="button" id="inserirAresta" value="Incluir Aresta">
+						</div>
+						<div class="col-sm-5" style="margin-left: -7px;">
+							<input class="btn btn-danger" type="button" id="remvoerAresta" value="Remover Aresta">
+						</div>
+						<div class="col-sm-3" style="margin-left: -19px;">
+							<input class="btn btn-warning" type="button" id="verificarExistencia" value="Verificar Aresta">
+						</div>
+					</div>
+				</div>
 			</div>
-
-			<div class="parte requisito" id="arestas">
-				<label>Inserir Aresta entre os vértices</label>
-				<br />
-				<label for="aresta1" id="aresta1">Aresta 1</label>
-				<select name="aresta1"></select>
-				<label for="aresta2">Aresta 2</label>
-				<select name="aresta2" id="aresta2"></select>
-				<input type="button" id="inserirAresta" value="Add">
+			<div class="panel panel-default requisito">
+				<div class="panel-heading" role="tab" id="headingFour">
+					<h4 class="panel-title">
+						<a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+							Funções
+						</a>
+					</h4>
+				</div>
+				<div id="collapseFour" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingFour">
+					<div class="panel-body">
+						<input class="btn btn-primary" type="button" id="verificarGraus" value="Obter Graus">
+						<div class="clearfix"></div>
+						<br />
+						<input class="btn btn-success" type="button" id="verificarEuler" value="Verificar caminho de Euler">
+						<div class="clearfix"></div>
+						<br />
+						<input class="btn btn-success" type="button" id="verificarGrafoConexo" value="Verificar grafo Conexo">
+						<div class="clearfix"></div>
+						<br />
+						<div id="incidencias">
+							<label>Matriz de Adjacências</label>
+						</div>
+					</div>
+				</div>
 			</div>
-
-			<div class="parte requisito" id="removerArestas">
-				<label>Remover Aresta entre os vértices</label>
-				<br />
-				<label for="aresta1" id="aresta1">Aresta 1</label>
-				<select name="aresta1"></select>
-				<label for="aresta2">Aresta 2</label>
-				<select name="aresta2" id="aresta2"></select>
-				<input type="button" id="remvoerAresta" value="Remover">
-			</div>
-
-			<div class="parte requisito" id="existencia">
-				<label>Verificar aresta entre dois vértices</label>
-				<br />
-				<label for="aresta1" id="aresta1">Aresta 1</label>
-				<select name="aresta1"></select>
-				<label for="aresta2">Aresta 2</label>
-				<select name="aresta2" id="aresta2"></select>
-				<input type="button" id="verificarExistencia" value="Verificar">
-			</div>
-
-			<div class="parte requisito" id="adjacentes">
-				<label>Vértices adjacentes</label>
-				<br />
-				<select name="vertices"></select>
-				<input type="button" id="verificarAdjacentes" value="Verificar">
-			</div>
-
-			<div class="parte requisito" id="grau">
-				<label>Verificar grau do vértice</label>
-				<br />
-				<select name="vertices"></select>
-				<input type="button" id="verificarGrau" value="Verificar">
-			</div>
-
-			<div class="parte requisito" id="obterGraus">
-				<label>Obter graus</label>
-				<br />
-				<input type="button" id="verificarGraus" value="Verificar">
-			</div>
-
-			<div class="parte requisito" id="euler">
-				<label>Verificar caminho de Euler</label>
-				<br />
-				<input type="button" id="verificarEuler" value="Verificar">
-			</div>
-
-			<div class="parte requisito" id="incidencias">
-				<label>Matriz de Adjacências</label>
-			</div>
-
-			<div class="parte requisito" id="conexo">
-				<label>Verificar Grafo conexo</label>
-				<br />
-				<input type="button" id="verificarGrafoConexo" value="Verificar">
-			</div>
-
 		</div>
 
 		<div class="plotagem">
 			<canvas id="canvas" width="1000" height="500" ></canvas>
-		</div>
-
-		<div id="infos">
-
 		</div>
 
 	</body>
@@ -123,61 +147,186 @@
 	var verificacao = '';
 	var adjacentes = '';
 	var adjacentesStart = '';
+	var leitor = new FileReader();
+	var visitados = new Array();
 
-	$('.requisito, #arquivo').hide();
-
-	$('input[name="tipoInclusao"]').on('change', function() {
-		if ($(this).val() == 0) {
-			$('#arquivo').hide();
-			$('#dinamico').show();
-		}else {
-			$('#arquivo').show();
-			$('#dinamico').hide();
-		}
-	});
+	$('.requisito').hide();
 
 	$('#inserirVertice').on('click', function() {
 		inserirVertice();
 	});
 
+	function inserirVertice() {
+		clearVariables();
+
+		vertices++;
+		gerarGrafo();
+
+		var texto = 'A';
+
+		$('select').each(function(i, v) {
+			$(v).children().remove();
+		});
+
+		for (var i = 0; i < vertices; i++) {
+			$('select').append('<option value="' + i + '">' + texto +'</option>')
+			texto = nextChar(texto);
+		}
+
+		$('.requisito').show();
+		matriz();
+	}
+
 	$('#removerVertice').on('click', function() {
-		removerVertice($('#remover select[name="vertices"]').val());
+		removerVertice($('select[name="vertices"]').val());
 	});
+
+	function removerVertice(vertice) {
+		clearVariables();
+
+		var verificacaoArestas = arestas.split(',');
+		
+		for (var c = 0; c < (verificacaoArestas.length - 1); c++) {
+			var partes = verificacaoArestas[c].split('.');
+			
+			if (partes[0] == vertice || partes[1] == vertice){
+				var find = verificacaoArestas[c] + ',';
+				var re = new RegExp(find, 'g');
+				arestas = arestas.replace(re, '');
+			}
+		}
+
+		vertices--;
+
+		if (vertices == 0)
+			$('.requisito').hide();
+
+		gerarGrafo();
+
+		matriz();
+	}
 
 	$('#inserirAresta').on('click', function() {
-		inserirAresta($('#arestas select[name="aresta1"]').val(), $('#arestas select[name="aresta2"]').val());
+		inserirAresta($('select[name="vertice1"]').val(), $('select[name="vertice2"]').val());
 	});
+
+	function inserirAresta(vertice1, vertice2) {
+		clearVariables();
+
+		var nome = vertice1 + '.' + vertice2;
+		
+		if (arestas.indexOf(nome) < 0) {
+			arestas += nome + ',';
+			gerarGrafo();
+		} else
+			alert('Aresta já existe no grafo');
+
+		matriz();
+	}
 
 	$('#remvoerAresta').on('click', function() {
-		removerAresta($('#removerArestas select[name="aresta1"]').val(), $('#removerArestas select[name="aresta2"]').val());
+		removerAresta($('select[name="vertice1"]').val(), $('select[name="vertice2"]').val());
 	});
+
+	function removerAresta(vertice1, vertice2) {
+		clearVariables();
+
+		var aresta1 = vertice1 + '.' + vertice2;
+		var aresta2 = vertice2 + '.' + vertice1;
+		console.log(aresta1);
+		console.log(aresta2);
+		console.log(arestas);
+		var find = aresta1 + ',';
+		var re = new RegExp(find, 'g');
+		arestas = arestas.replace(re, '');
+
+		var find = aresta2 + ',';
+		var re = new RegExp(find, 'g');
+		arestas = arestas.replace(re, '');
+
+		gerarGrafo();
+
+		matriz();
+	}
 
 	$('#verificarExistencia').on('click', function() {
-		verificarExistencia($('#existencia select[name="aresta1"]').val(), $('#existencia select[name="aresta2"]').val());
+		verificarExistencia($('select[name="vertice1"]').val(), $('select[name="vertice2"]').val());
 	});	
 
+	function verificarExistencia(vertice1, vertice2) {
+		clearVariables();
+
+		var nomeVerificacao1 = vertice1 + '.' + vertice2;
+		var nomeVerificacao2 = vertice2 + '.' + vertice1;
+		
+		var existe = false;
+
+		if (arestas.indexOf(nomeVerificacao1) >= 0) {
+			verificacao += nomeVerificacao1 + ',';
+			existe = true;
+		}
+
+		if (arestas.indexOf(nomeVerificacao2) >= 0) {
+			verificacao += nomeVerificacao2 + ',';
+			existe = true;
+		}
+
+		if (!existe)
+			alert('Não existe aresta para os vértices pesquisados');
+		else
+			gerarGrafo();
+	}
+
 	$('#verificarAdjacentes').on('click', function() {
-		verificarAdjacentes($('#adjacentes select[name="vertices"]').val(), false);
+		verificarAdjacentes($('select[name="vertices"]').val(), false);
 	});
 
+	function verificarAdjacentes(vertice, inner) {
+		clearVariables();
+
+		var verificacaoArestas = arestas.split(',');
+		adjacentesStart = vertice;
+		
+		for (var c = 0; c < (verificacaoArestas.length - 1); c++) {
+			var partes = verificacaoArestas[c].split('.');
+
+			if (partes[0] == adjacentesStart)
+				adjacentes += partes[1] + ',';
+			else if (partes[1] == adjacentesStart)
+				adjacentes += partes[0] + ',';
+		}
+
+		if (!inner) {
+			if (adjacentes == '') 
+				alert('Não existem vértices adjacentes');
+			else
+				gerarGrafo();
+		}else
+			return adjacentes;
+	}
+
 	$('#verificarGrau').on('click', function() {
-		verificarGrau($('#grau select[name="vertices"]').val());
+		verificarGrau($('select[name="vertices"]').val());
 	});
+
+	function verificarGrau(vertice) {
+		clearVariables();
+
+		var verificacaoArestas = arestas.split(',');
+		var grauStart = vertice;
+		var grau = 0;
+		
+		for (var c = 0; c < (verificacaoArestas.length - 1); c++) {
+			grau += getGrauByAresta(verificacaoArestas[c], grauStart);
+		}
+
+		var nome = $('select[name="vertices"] option[value="' + grauStart + '"]').text();
+
+		alert('O vértice ' + nome + ' possui grau ' + grau);
+	}
 
 	$('#verificarGraus').on('click', function() {
 		verificarGraus();
-	});
-
-	$('#verificarEuler').on('click', function() {
-		euler();
-	});
-
-	/*$('#gerarMatriz').on('click', function() {
-		matriz();
-	});*/
-
-	$('#verificarGrafoConexo').on('click', function() {
-		verificarGrafoConexo(false);
 	});
 
 	function verificarGraus() {
@@ -192,7 +341,7 @@
 		var grauMedio = 0;
 
 		var verificacaoArestas = arestas.split(',');
-		$('#grau select[name="vertices"] option').each(function(i, v) {
+		$('select[name="vertices"] option').each(function(i, v) {
 			var grauStart = $(v).prop('value');
 			var grau = 0;
 			
@@ -221,9 +370,129 @@
 			}
 		});
 		
-		grauMedio = grauMedio / $('#grau select[name="vertices"] option').length;		
+		grauMedio = grauMedio / $('select[name="vertices"] option').length;		
 
 		alert('Grau máximo: ' + grauMaximoNome + ' - ' + grauMaximo + '\r\nGrau mínimo: ' + grauMinimoNome + ' - ' + grauMinimo + '\r\nGrau médio: ' + grauMedio);
+	}
+
+	$('#verificarEuler').on('click', function() {
+		euler();
+	});
+
+	function euler() {
+		clearVariables();
+
+		var conexo = verificarGrafoConexo(true);
+
+		if (!conexo)
+			alert('Não existe caminho de Euler');
+		else {
+			var grausImpares = 0;
+
+			var verificacaoArestas = arestas.split(',');
+			$('select[name="vertices"] option').each(function(i, v) {
+				var grauStart = $(v).prop('value');
+				var grau = 0;
+				
+				for (var c = 0; c < (verificacaoArestas.length - 1); c++) {
+					grau += getGrauByAresta(verificacaoArestas[c], grauStart);
+				}
+
+				if (grau % 2 != 0)
+					grausImpares++;
+			});
+			
+			if (grausImpares == 0 || grausImpares == 2)
+				alert('Existe caminho de Euler');
+			else
+				alert('Não existe caminho de Euler');
+		}
+	}
+
+	/*$('#gerarMatriz').on('click', function() {
+		matriz();
+	});*/
+
+	function matriz() {
+		clearVariables();
+		$('#tblIncidencias').remove();
+
+		var vertices = new Array();
+
+		$('select[name="vertices"] option').each(function(i, v) {
+			vertices.push(v.value + "");
+		});
+
+		var matriz = new Array();
+		var header = '<th></th>';
+		var body = '';
+		
+		for (var i = 0; i < vertices.length; i++) {
+			matriz[i] = new Array();
+			header += '<th>' + $('select[name="vertices"] option[value="' + vertices[i] + '"]').text() + '</th>';
+			body += '<tr><td>' + $('select[name="vertices"] option[value="' + vertices[i] + '"]').text() + '</td>';
+			for (var j = 0; j < vertices.length; j++) {
+				var aresta1 = vertices[i] + '.' + vertices[j];
+				var aresta2 = vertices[j] + '.' + vertices[i];
+
+				var total = 0;
+				if (arestas.indexOf(aresta1) >= 0)
+					total++;
+
+				if (aresta1 != aresta2) {
+					if (arestas.indexOf(aresta2) >= 0)
+						total++;
+				}
+				
+				body += '<td>' + total + '</td>';
+			}
+			body += '</tr>';
+		}
+
+		var retorno = '<table class="table" id="tblIncidencias" border="1" cellspacing="0" colspacing="0">' +
+		'<thead><tr>' + header + '</tr></thead>' +
+		'<tbody>' + body + '</tbody' +
+		'</table>';
+		
+		$('#incidencias').append(retorno);
+	}
+
+	$('#verificarGrafoConexo').on('click', function() {
+		verificarGrafoConexo(false);
+	});
+
+	function verificarGrafoConexo(inner) {
+		visitados = new Array();
+		var adjacencias = new Array();
+
+		buscaFrofunda(0);
+
+		var conexo = true;
+		$('select[name="vertices"] option').each(function(i, v) {
+			if (!visitados[v.value])
+				conexo = false;
+		});	
+
+		if (inner)
+			return conexo;
+		else{
+			if (conexo)
+				alert('Grafo conexo!')
+			else
+				alert('Grafo não conexo!')
+		}
+	}
+
+	function buscaFrofunda(vertice) {
+		visitados[vertice] = true;
+
+		var adjacencias = verificarAdjacentes(vertice, true);
+		adjacencias = adjacencias.split(',');
+		
+		for (var i = 0; i < (adjacencias.length - 1); i++) {
+			if (!visitados[adjacencias[i]])
+				buscaFrofunda(adjacencias[i]);
+		}
 	}
 
 	function clearVariables() {
@@ -358,82 +627,7 @@
 	function nextChar(c) {
 	    return String.fromCharCode(c.charCodeAt(0) + 1);
 	}
-
-	function euler() {
-		clearVariables();
-
-		var conexo = verificarGrafoConexo(true);
-
-		if (!conexo)
-			alert('Não existe caminho de Euler');
-		else {
-			var grausImpares = 0;
-
-			var verificacaoArestas = arestas.split(',');
-			$('#grau select[name="vertices"] option').each(function(i, v) {
-				var grauStart = $(v).prop('value');
-				var grau = 0;
-				
-				for (var c = 0; c < (verificacaoArestas.length - 1); c++) {
-					grau += getGrauByAresta(verificacaoArestas[c], grauStart);
-				}
-
-				if (grau % 2 != 0)
-					grausImpares++;
-			});
-			
-			if (grausImpares == 0 || grausImpares == 2)
-				alert('Existe caminho de Euler');
-			else
-				alert('Não existe caminho de Euler');
-		}
-	}
-
-	function matriz() {
-		clearVariables();
-		$('#tblIncidencias').remove();
-
-		var vertices = new Array();
-
-		$('#grau select[name="vertices"] option').each(function(i, v) {
-			vertices.push(v.value + "");
-		});
-
-		var matriz = new Array();
-		var header = '<th></th>';
-		var body = '';
-		
-		for (var i = 0; i < vertices.length; i++) {
-			matriz[i] = new Array();
-			header += '<th>' + $('#grau select[name="vertices"] option[value="' + vertices[i] + '"]').text() + '</th>';
-			body += '<tr><td>' + $('#grau select[name="vertices"] option[value="' + vertices[i] + '"]').text() + '</td>';
-			for (var j = 0; j < vertices.length; j++) {
-				var aresta1 = vertices[i] + '.' + vertices[j];
-				var aresta2 = vertices[j] + '.' + vertices[i];
-
-				var total = 0;
-				if (arestas.indexOf(aresta1) >= 0)
-					total++;
-
-				if (aresta1 != aresta2) {
-					if (arestas.indexOf(aresta2) >= 0)
-						total++;
-				}
-				
-				body += '<td>' + total + '</td>';
-			}
-			body += '</tr>';
-		}
-
-		var retorno = '<table id="tblIncidencias" border="1" cellspacing="0" colspacing="0">' +
-		'<thead><tr>' + header + '</tr></thead>' +
-		'<tbody>' + body + '</tbody' +
-		'</table>';
-		
-		$('#incidencias').append(retorno);
-	}
-
-	var leitor = new FileReader();
+	
 
 	window.onload = function init() {
 		leitor.onload = lerArquivo;
@@ -496,184 +690,6 @@
 			grau++;
 
 		return grau;
-	}
-
-	function inserirVertice() {
-		clearVariables();
-
-		vertices++;
-		gerarGrafo();
-
-		var texto = 'A';
-
-		$('select').each(function(i, v) {
-			$(v).children().remove();
-		});
-
-		for (var i = 0; i < vertices; i++) {
-			$('select').append('<option value="' + i + '">' + texto +'</option>')
-			texto = nextChar(texto);
-		}
-
-		$('.requisito').show();
-		matriz();
-	}
-
-	function inserirAresta(vertice1, vertice2) {
-		clearVariables();
-
-		var nome = vertice1 + '.' + vertice2;
-		
-		if (arestas.indexOf(nome) < 0) {
-			arestas += nome + ',';
-			gerarGrafo();
-		} else
-			alert('Aresta já existe no grafo');
-
-		matriz();
-	}
-
-	function removerVertice(vertice) {
-		clearVariables();
-
-		var verificacaoArestas = arestas.split(',');
-		
-		for (var c = 0; c < (verificacaoArestas.length - 1); c++) {
-			var partes = verificacaoArestas[c].split('.');
-			
-			if (partes[0] == vertice || partes[1] == vertice){
-				var find = verificacaoArestas[c] + ',';
-				var re = new RegExp(find, 'g');
-				arestas = arestas.replace(re, '');
-			}
-		}
-
-		vertices--;
-
-		if (vertices == 0)
-			$('.requisito').hide();
-
-		gerarGrafo();
-
-		matriz();
-	}
-
-	function removerAresta(vertice1, vertice2) {
-		clearVariables();
-
-		var aresta1 = vertice1 + '.' + vertice2;
-		var aresta2 = vertice2 + '.' + vertice1;
-
-		var find = aresta1 + ',';
-		var re = new RegExp(find, 'g');
-		arestas = arestas.replace(re, '');
-
-		var find = aresta2 + ',';
-		var re = new RegExp(find, 'g');
-		arestas = arestas.replace(re, '');
-
-		gerarGrafo();
-
-		matriz();
-	}
-
-	function verificarExistencia(vertice1, vertice2) {
-		clearVariables();
-
-		var nomeVerificacao1 = vertice1 + '.' + vertice2;
-		var nomeVerificacao2 = vertice2 + '.' + vertice1;
-		
-		var existe = false;
-
-		if (arestas.indexOf(nomeVerificacao1) >= 0) {
-			verificacao += nomeVerificacao1 + ',';
-			existe = true;
-		}
-
-		if (arestas.indexOf(nomeVerificacao2) >= 0) {
-			verificacao += nomeVerificacao2 + ',';
-			existe = true;
-		}
-
-		if (!existe)
-			alert('Não existe aresta para os vértices pesquisados');
-		else
-			gerarGrafo();
-	}
-
-	function verificarAdjacentes(vertice, inner) {
-		clearVariables();
-
-		var verificacaoArestas = arestas.split(',');
-		adjacentesStart = vertice;
-		
-		for (var c = 0; c < (verificacaoArestas.length - 1); c++) {
-			var partes = verificacaoArestas[c].split('.');
-
-			if (partes[0] == adjacentesStart)
-				adjacentes += partes[1] + ',';
-			else if (partes[1] == adjacentesStart)
-				adjacentes += partes[0] + ',';
-		}
-
-		if (!inner) {
-			if (adjacentes == '') 
-				alert('Não existem vértices adjacentes');
-			else
-				gerarGrafo();
-		}else
-			return adjacentes;
-	}
-
-	function verificarGrau(vertice) {
-		clearVariables();
-
-		var verificacaoArestas = arestas.split(',');
-		var grauStart = vertice;
-		var grau = 0;
-		
-		for (var c = 0; c < (verificacaoArestas.length - 1); c++) {
-			grau += getGrauByAresta(verificacaoArestas[c], grauStart);
-		}
-
-		var nome = $('#grau select[name="vertices"] option[value="' + grauStart + '"]').text();
-
-		alert('O vértice ' + nome + ' possui grau ' + grau);
-	}
-
-	var visitados = new Array();
-	function verificarGrafoConexo(inner) {
-		visitados = new Array();
-		var adjacencias = new Array();
-
-		buscaFrofunda(0);
-
-		var conexo = true;
-		$('#grau select[name="vertices"] option').each(function(i, v) {
-			if (!visitados[v.value])
-				conexo = false;
-		});	
-
-		if (inner)
-			return conexo;
-		else{
-			if (conexo)
-				alert('Grafo conexo!')
-			else
-				alert('Grafo não conexo!')
-		}
-	}
-
-	function buscaFrofunda(vertice) {
-		visitados[vertice] = true;
-
-		var adjacencias = verificarAdjacentes(vertice, true);
-		adjacencias = adjacencias.split(',');
-		
-		for (var i = 0; i < (adjacencias.length - 1); i++) {
-			if (!visitados[adjacencias[i]])
-				buscaFrofunda(adjacencias[i]);
-		}
 	}
           
 </script>
