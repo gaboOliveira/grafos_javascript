@@ -3,10 +3,20 @@
 		<title>Grafos</title>
 		<meta charset="UTF-8">
 		<link rel="stylesheet" type="text/css" href="resources/css/app.css">
-		<!-- JQuery library for js interations -->
+		<!-- 
+			Pt-Br: Biblioteca JQuery para interações de javascript
+			EN: JQuery library for js interations 
+		-->
 		<script type="text/javascript" src="resources/libraries/jquery.js"></script>
-		<!-- Canvas library for graph plot -->
+		<!-- 
+			Pt-Br: Biblioteca canvas para plotagem do grafo
+			EN: Canvas library for graph plot 
+		-->
 		<script type="text/javascript" src="resources/libraries/jcanvas.js"></script>
+		<!-- 
+			Pt-Br: Biblioteca bootstrap para interface gráfica
+			EN: Bootstrap library for interface experience 
+		-->
 		<script src="resources/libraries/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 		<link href="resources/libraries/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
 	</head>
@@ -14,6 +24,10 @@
 
 		<br />
 
+		<!-- 
+			Pt-Br: Espaço para exibição de mensagens de alertas 
+			EN: Area reservation for alerts
+		-->
 		<div id="alertas"></div>
 
 		<div class="panel-group col-lg-4" id="accordion" role="tablist" aria-multiselectable="true">
@@ -169,14 +183,7 @@
 
 		var texto = 'A';
 
-		$('select').each(function(i, v) {
-			$(v).children().remove();
-		});
-
-		for (var i = 0; i < vertices; i++) {
-			$('select').append('<option value="' + i + '">' + texto +'</option>')
-			texto = nextChar(texto);
-		}
+		redefinirVertices();
 
 		$('.requisito').show();
 		matriz();
@@ -202,6 +209,8 @@
 		}
 
 		vertices--;
+
+		redefinirVertices();
 
 		if (vertices == 0)
 			$('.requisito').hide();
@@ -245,9 +254,7 @@
 
 		var aresta1 = vertice1 + '.' + vertice2;
 		var aresta2 = vertice2 + '.' + vertice1;
-		console.log(aresta1);
-		console.log(aresta2);
-		console.log(arestas);
+		
 		var find = aresta1 + ',';
 		var re = new RegExp(find, 'g');
 		arestas = arestas.replace(re, '');
@@ -762,12 +769,8 @@
 								return;
 							}else{
 								arestas = linhas[1];
-
-								var letra = 'A';
-								for (var i = 0; i < linhas[0]; i++) {
-									$('select').append('<option value="' + i + '">' + letra + '</option>');
-									letra = nextChar(letra);
-								}
+								redefinirVertices();
+								
 								matriz();
 								gerarGrafo();
 								$('.requisito').show();
@@ -790,6 +793,15 @@
 			grau++;
 
 		return grau;
+	}
+
+	function redefinirVertices() {
+		$('select option').remove();
+		var letra = 'A';
+		for (var i = 0; i < vertices; i++) {
+			$('select').append('<option value="' + i + '">' + letra + '</option>');
+			letra = nextChar(letra);
+		}
 	}
           
 </script>
