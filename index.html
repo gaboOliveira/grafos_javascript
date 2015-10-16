@@ -3,7 +3,9 @@
 		<title>Grafos</title>
 		<meta charset="UTF-8">
 		<link rel="stylesheet" type="text/css" href="resources/css/app.css">
+		<!-- JQuery library for js interations -->
 		<script type="text/javascript" src="resources/libraries/jquery.js"></script>
+		<!-- Canvas library for graph plot -->
 		<script type="text/javascript" src="resources/libraries/jcanvas.js"></script>
 		<script src="resources/libraries/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 		<link href="resources/libraries/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet">
@@ -72,6 +74,7 @@
 						<label>
 							<input type="file" id="inserirArquivo" value="Add" onchange="pegaArquivo(this)">
 						</label>
+						<input class="btn btn-warning" type="button" id="incluirArquivo" value="Redefinir">
 					</div>
 				</div>
 			</div>
@@ -688,11 +691,14 @@
 	function nextChar(c) {
 	    return String.fromCharCode(c.charCodeAt(0) + 1);
 	}
-	
 
 	window.onload = function init() {
 		leitor.onload = lerArquivo;
 	}
+
+	$('#incluirArquivo').click(function() {
+		$(':file').change();
+	});
 
 	function pegaArquivo(inputFile) {
 		var file = inputFile.files[0];
@@ -756,8 +762,15 @@
 								return;
 							}else{
 								arestas = linhas[1];
+
+								var letra = 'A';
+								for (var i = 0; i < linhas[0]; i++) {
+									$('select').append('<option value="' + i + '">' + letra + '</option>');
+									letra = nextChar(letra);
+								}
 								matriz();
 								gerarGrafo();
+								$('.requisito').show();
 							}
 						}
 					}
