@@ -12,7 +12,7 @@
 			Pt-Br: Biblioteca canvas para plotagem do grafo
 			EN: Canvas library for graph plot 
 		-->
-		<script type="text/javascript" src="resources/libraries/jcanvas.js"></script>
+		<script type="text/javascript" src="resources/libraries/jcanvas.min.js"></script>
 		<!-- 
 			Pt-Br: Biblioteca bootstrap para interface gráfica
 			EN: Bootstrap library for interface experience 
@@ -661,13 +661,23 @@
                         end: 1
                     }).restoreCanvas();
 
-                }else {                	
+                }else {       
 
-                  	var arestaVerificacao = plotagemVertices[1] + '.' + plotagemVertices[0],
-                  	x1 = X[plotagemVertices[0]],
-                  	y1 = Y[plotagemVertices[0]],
-                  	x2 = X[plotagemVertices[1]],
-                  	y2 = Y[plotagemVertices[1]];
+                	var circle1 = {
+		                x: X[plotagemVertices[0]],
+		                y: Y[plotagemVertices[0]],
+		                r: 12
+		            };
+
+		            var circle2 = {
+		                x: X[plotagemVertices[1]],
+		                y: Y[plotagemVertices[1]],
+		                r: 12
+		            };         	
+
+		            var ptCircle1 = getPointOnCircle(circle1.r, circle1, circle2);
+            		var ptCircle2 = getPointOnCircle(circle2.r, circle2, circle1);
+                  	var arestaVerificacao = plotagemVertices[1] + '.' + plotagemVertices[0];
                   	
                   	if (inseridas.indexOf(arestaVerificacao) >= 0){
                   		y1 += 10;
@@ -677,15 +687,19 @@
                   	var cor = '#000';
 					if (verificacao.indexOf(plotagemArestas[c]) >= 0) 
 						cor = '#ff0000';
-
+					
 					$("canvas").drawLine({
 						strokeStyle: cor,
 						strokeWidth: 2,
 						rounded: true,
-						x1: x1, 
-						y1: y1,
-						x2: x2, 
-						y2: y2,
+						startArrow: true,
+						bringToFront: false,
+						arrowRadius: 10,
+						arrowAngle: 90,
+						x1: ptCircle1.x, 
+						y1: ptCircle1.y,
+						x2: ptCircle2.x, 
+						y2: ptCircle2.y,
 					});
 
 					inseridas += plotagemArestas[c] + ',';
@@ -803,5 +817,24 @@
 			letra = nextChar(letra);
 		}
 	}
+
+	function getPointOnCircle(radius, originPt, endPt) {
+        var angleInDegrees = getAngleBetweenPoints(originPt, endPt);
+
+
+        // Convert from degrees to radians via multiplication by PI/180        
+        var x = radius * Math.cos(angleInDegrees * Math.PI / 180) + originPt.x;
+        var y = radius * Math.sin(angleInDegrees * Math.PI / 180) + originPt.y;
+
+        return { x: x, y: y };
+    }
+
+    function getAngleBetweenPoints(originPt, endPt) {
+        var interPt = { x: endPt.x - originPt.x,
+            y: endPt.y - originPt.y
+        };
+
+        return Math.atan2(interPt.y, interPt.x) * 180 / Math.PI;
+    }
           
 </script>
