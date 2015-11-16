@@ -30,14 +30,19 @@
 		-->
 		<div id="alertas"></div>
 
-		<div class="panel-group col-lg-4" id="accordion" role="tablist" aria-multiselectable="true">
+		<div class="panel-group" style="width: 28%; float:left" id="accordion" role="tablist" aria-multiselectable="true">
 			<div class="panel panel-default">
-				<div class="panel-heading" role="tab" id="headingOne">
+				<div class="panel-heading" role="tab" id="headingZero">
 					<h4 class="panel-title">
-						<a data-parent="#accordion">
+						<a role="button" data-toggle="collapse" data-parent="#accordion" href="#collapseZero" aria-expanded="true" aria-controls="collapseZero">
 							Grafos
 						</a>
 					</h4>
+				</div>
+				<div id="collapseZero" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingZero">
+					<div class="panel-body">
+						<input type="checkbox" name="tipoGrafo" value="0"> Grafo dirigido?
+					</div>
 				</div>
 			</div>
 			<div class="panel panel-default">
@@ -50,9 +55,10 @@
 				</div>
 				<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 					<div class="panel-body">
-						<div class="col-sm-1">
-							<input type="button" class="btn btn-primary" id="inserirVertice" value="Incluir">
+						<div class="col-xs-2">
+							<input class="form-control" type="text" name="verticeName" maxlength="1">
 						</div>
+						<input type="button" class="btn btn-primary" id="inserirVertice" value="Incluir">
 						<div class="clearfix"></div>
 						<div class="requisito">
 							<hr />
@@ -151,8 +157,8 @@
 			</div>
 		</div>
 
-		<div class="plotagem">
-			<canvas id="canvas" width="1000" height="500" ></canvas>
+		<div class="plotagem" style="width: 70%">
+			<canvas id="canvas"></canvas>
 		</div>
 
 	</body>
@@ -161,13 +167,14 @@
 
 <script type="text/javascript">
 
-	var vertices = 0;
+	var vertices = new Array();
 	var arestas = '';
 	var verificacao = '';
 	var adjacentes = '';
 	var adjacentesStart = '';
 	var leitor = new FileReader();
 	var visitados = new Array();
+	var matrizAdjacencia = new Array();
 
 	$('.requisito').hide();
 
@@ -175,18 +182,45 @@
 		inserirVertice();
 	});
 
+	$(':checkbox').on('change', function() {
+		gerarGrafo($(':checkbox').is(':checked'));
+	});
+
+	function redefinirVertices() {
+		$('select option').remove();
+		for (key in vertices) {
+			$('select').append('<option value="' + key + '">' + key + '</option>');
+		}
+	}
+
 	function inserirVertice() {
 		clearVariables();
 
-		vertices++;
-		gerarGrafo();
+		var existe = false;
+		for (key in vertices) {
+			if (key == $('input[name="verticeName"]').val())
+				existe = true
+		}
 
-		var texto = 'A';
+		if ($('input[name="verticeName"]').val() == '' || existe) {
+			$('#alertas').html('');
+			var alerta = '' +
+				'<div class="alert alert-danger alert-dismissible" role="alert">'+
+					'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+					'<strong>Atenção!</strong> Não foi possível inserir este vértice. Escolha outro nome!'+
+				'</div>';
+			$('#alertas').html(alerta);
+		}else {
+			vertices[$('input[name="verticeName"]').val()] = $('input[name="verticeName"]').val();
+			gerarGrafo($(':checkbox').is(':checked'));
 
-		redefinirVertices();
+			var texto = 'A';
 
-		$('.requisito').show();
-		matriz();
+			redefinirVertices();
+
+			$('.requisito').show();
+			matriz();
+		}	
 	}
 
 	$('#removerVertice').on('click', function() {
@@ -200,7 +234,7 @@
 		
 		for (var c = 0; c < (verificacaoArestas.length - 1); c++) {
 			var partes = verificacaoArestas[c].split('.');
-			
+
 			if (partes[0] == vertice || partes[1] == vertice){
 				var find = verificacaoArestas[c] + ',';
 				var re = new RegExp(find, 'g');
@@ -208,14 +242,21 @@
 			}
 		}
 
-		vertices--;
+		var total = 0;
+
+		for (key in vertices) {
+			if (key == vertice)
+				delete vertices[key];
+			else
+				total++;
+		}
 
 		redefinirVertices();
 
-		if (vertices == 0)
+		if (total == 0)
 			$('.requisito').hide();
 
-		gerarGrafo();
+		gerarGrafo($(':checkbox').is(':checked'));
 
 		matriz();
 	}
@@ -231,7 +272,7 @@
 		
 		if (arestas.indexOf(nome) < 0) {
 			arestas += nome + ',';
-			gerarGrafo();
+			gerarGrafo($(':checkbox').is(':checked'));
 		} else {
 			$('#alertas').html('');
 			var alerta = '' +
@@ -263,7 +304,7 @@
 		var re = new RegExp(find, 'g');
 		arestas = arestas.replace(re, '');
 
-		gerarGrafo();
+		gerarGrafo($(':checkbox').is(':checked'));
 
 		matriz();
 	}
@@ -299,7 +340,7 @@
 				'</div>';
 			$('#alertas').html(alerta);
 		} else
-			gerarGrafo();
+			gerarGrafo($(':checkbox').is(':checked'));
 	}
 
 	$('#verificarAdjacentes').on('click', function() {
@@ -331,7 +372,7 @@
 					'</div>';
 				$('#alertas').html(alerta);
 			} else
-				gerarGrafo();
+				gerarGrafo($(':checkbox').is(':checked'));
 		}else
 			return adjacentes;
 	}
@@ -468,10 +509,6 @@
 		}
 	}
 
-	/*$('#gerarMatriz').on('click', function() {
-		matriz();
-	});*/
-
 	function matriz() {
 		clearVariables();
 		$('#tblIncidencias').remove();
@@ -482,12 +519,12 @@
 			vertices.push(v.value + "");
 		});
 
-		var matriz = new Array();
+		matrizAdjacencia = new Array();
 		var header = '<th></th>';
 		var body = '';
 		
 		for (var i = 0; i < vertices.length; i++) {
-			matriz[i] = new Array();
+			matrizAdjacencia[i] = new Array();
 			header += '<th>' + $('select[name="vertices"] option[value="' + vertices[i] + '"]').text() + '</th>';
 			body += '<tr><td>' + $('select[name="vertices"] option[value="' + vertices[i] + '"]').text() + '</td>';
 			for (var j = 0; j < vertices.length; j++) {
@@ -572,19 +609,15 @@
 		adjacentes = '';
 	}
 
-	function gerarGrafo() {
+	function gerarGrafo(dirigido) {
 		var canvas = document.getElementById('canvas');
 		var context = canvas.getContext('2d');
 		context.clearRect(0, 0, canvas.width, canvas.height);
 
-		var N = vertices;
+        var X = new Array();
+        var Y = new Array();
 
-        var X = new Array(N);
-        var Y = new Array(N);
-
-        var texto = 'A';
-
-        for (var i = 0; i < N; i++) {
+        for (key in vertices) {
 
 			var x = Math.random() * canvas.width;
 			var y = Math.random() * canvas.height;
@@ -606,11 +639,11 @@
 			else
 				c_y = y;			
 			
-			X[i] = c_x;
-			Y[i] = c_y;
+			X[key] = c_x;
+			Y[key] = c_y;
 
 			var cor = "#000";
-			if (adjacentes.indexOf(i) >= 0)
+			if (adjacentes.indexOf(key) >= 0)
 				cor = '#ff0000';
 
 			$("canvas").drawArc({
@@ -625,11 +658,8 @@
 				x: c_x, 
 				y: c_y,
 				font: "10pt Verdana, sans-serif",
-				text: texto
+				text: vertices[key]
           	});
-
-          	texto = nextChar(texto);
-
         }
 
         if (arestas.length > 0) {
@@ -646,6 +676,8 @@
 						cor = '#ff0000';
 
         			var k = c + 1;
+
+        			var x, y;
 
         			$("canvas").rotateCanvas({
 						rotate: 135,
@@ -687,25 +719,37 @@
                   	var cor = '#000';
 					if (verificacao.indexOf(plotagemArestas[c]) >= 0) 
 						cor = '#ff0000';
-					
-					$("canvas").drawLine({
-						strokeStyle: cor,
-						strokeWidth: 2,
-						rounded: true,
-						startArrow: true,
-						bringToFront: false,
-						arrowRadius: 10,
-						arrowAngle: 90,
-						x1: ptCircle1.x, 
-						y1: ptCircle1.y,
-						x2: ptCircle2.x, 
-						y2: ptCircle2.y,
-					});
+
+					if (dirigido) {
+						$("canvas").drawLine({
+							strokeStyle: cor,
+							strokeWidth: 2,
+							rounded: true,
+							startArrow: true,
+							bringToFront: false,
+							arrowRadius: 10,
+							arrowAngle: 90,
+							x1: ptCircle1.x, 
+							y1: ptCircle1.y,
+							x2: ptCircle2.x, 
+							y2: ptCircle2.y,
+						});
+					}else {
+						$("canvas").drawLine({
+							strokeStyle: cor,
+							strokeWidth: 2,
+							rounded: true,
+							bringToFront: false,
+							x1: ptCircle1.x, 
+							y1: ptCircle1.y,
+							x2: ptCircle2.x, 
+							y2: ptCircle2.y,
+						});
+					}
 
 					inseridas += plotagemArestas[c] + ',';
-                  }
+                }
         	}
-
         }
 	}
 
@@ -786,7 +830,7 @@
 								redefinirVertices();
 								
 								matriz();
-								gerarGrafo();
+								gerarGrafo($(':checkbox').is(':checked'));
 								$('.requisito').show();
 							}
 						}
@@ -807,15 +851,6 @@
 			grau++;
 
 		return grau;
-	}
-
-	function redefinirVertices() {
-		$('select option').remove();
-		var letra = 'A';
-		for (var i = 0; i < vertices; i++) {
-			$('select').append('<option value="' + i + '">' + letra + '</option>');
-			letra = nextChar(letra);
-		}
 	}
 
 	function getPointOnCircle(radius, originPt, endPt) {
