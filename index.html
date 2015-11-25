@@ -55,7 +55,7 @@
 				</div>
 				<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
 					<div class="panel-body">
-						<div class="col-xs-2">
+						<div class="col-xs-3">
 							<input class="form-control" type="text" name="verticeName" maxlength="1">
 						</div>
 						<input type="button" class="btn btn-primary" id="inserirVertice" value="Incluir">
@@ -108,13 +108,17 @@
 				</div>
 				<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
 					<div class="panel-body">
-						<div class="col-sm-3" style="margin-left: -16px;">
+						<div class="col-sm-4" style="margin-left: -16px;">
 							<label for="vertice1" id="vertice1">Vértice 1</label>
 							<select class="form-control" name="vertice1"></select>
 						</div>
-						<div class="col-sm-3">
+						<div class="col-sm-4">
 							<label for="vertice2">Vértice 2</label>
 							<select class="form-control" name="vertice2" id="vertice2"></select>
+						</div>
+						<div class="col-sm-3 peso hide">
+							<label for="peso">Peso</label>
+							<input class="form-control" name="peso" id="peso" />
 						</div>
 						<div class="clearfix"></div>
 						<hr />
@@ -158,7 +162,7 @@
 		</div>
 
 		<div class="plotagem" style="width: 70%">
-			<canvas id="canvas"></canvas>
+			<canvas width="700" id="canvas"></canvas>
 		</div>
 
 	</body>
@@ -176,6 +180,11 @@
 	var visitados = new Array();
 	var matrizAdjacencia = new Array();
 
+	$(function() {
+		var divCanvas = $('.plotagem');
+		$('canvas').prop('width', divCanvas.width()).prop('height', divCanvas.height());
+	});
+
 	$('.requisito').hide();
 
 	$('#inserirVertice').on('click', function() {
@@ -183,7 +192,14 @@
 	});
 
 	$(':checkbox').on('change', function() {
-		gerarGrafo($(':checkbox').is(':checked'));
+		var tipoGrafo = $(':checkbox').is(':checked');
+
+		if (tipoGrafo)
+			$('.peso').removeClass('hide');
+		else
+			$('.peso').addClass('hide');
+
+		gerarGrafo(tipoGrafo);
 	});
 
 	function redefinirVertices() {
@@ -262,28 +278,38 @@
 	}
 
 	$('#inserirAresta').on('click', function() {
-		inserirAresta($('select[name="vertice1"]').val(), $('select[name="vertice2"]').val());
+		inserirAresta($('select[name="vertice1"]').val(), $('select[name="vertice2"]').val(), $('input[name="peso"]').val());
 	});
 
-	function inserirAresta(vertice1, vertice2) {
-		clearVariables();
-
-		var nome = vertice1 + '.' + vertice2;
-		
-		if (arestas.indexOf(nome) < 0) {
-			arestas += nome + ',';
-			gerarGrafo($(':checkbox').is(':checked'));
-		} else {
+	function inserirAresta(vertice1, vertice2, peso) {
+		if ((vertice1 == vertice2) && $(':checkbox').is(':checked')) {
 			$('#alertas').html('');
 			var alerta = '' +
 				'<div class="alert alert-danger alert-dismissible" role="alert">'+
 					'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
-					'<strong>Atenção!</strong> Aresta já existe no grafo'+
+					'<strong>Atenção!</strong> Não se pode inserir aresta para o mesmo vértice de saída quando o grafo é dirigido!'+
 				'</div>';
 			$('#alertas').html(alerta);
-		}
+		}else {
+			clearVariables();
 
-		matriz();
+			var nome = vertice1 + '.' + vertice2 + '.' + peso;
+			
+			if (arestas.indexOf(nome) < 0) {
+				arestas += nome + ',';
+				gerarGrafo($(':checkbox').is(':checked'));
+			} else {
+				$('#alertas').html('');
+				var alerta = '' +
+					'<div class="alert alert-danger alert-dismissible" role="alert">'+
+						'<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+						'<strong>Atenção!</strong> Aresta já existe no grafo'+
+					'</div>';
+				$('#alertas').html(alerta);
+			}
+
+			matriz();
+		}
 	}
 
 	$('#remvoerAresta').on('click', function() {
@@ -532,14 +558,17 @@
 				var aresta2 = vertices[j] + '.' + vertices[i];
 
 				var total = 0;
-				if (arestas.indexOf(aresta1) >= 0)
+				var totalDirigido = 0;
+				if (arestas.indexOf(aresta1) >= 0) {
 					total++;
+					totalDirigido = 1;
+				}
 
 				if (aresta1 != aresta2) {
 					if (arestas.indexOf(aresta2) >= 0)
 						total++;
 				}
-				
+				matrizAdjacencia[i][j] = $(':checkbox').is(':checked') ? totalDirigido : total;
 				body += '<td>' + total + '</td>';
 			}
 			body += '</tr>';
@@ -669,6 +698,7 @@
 
         	for (var c = 0; c < (plotagemArestas.length - 1); c++) {
         		var plotagemVertices = plotagemArestas[c].split('.');
+        		var peso = plotagemVertices.length > 2 ? plotagemVertices[2] : '';
 
         		if (plotagemVertices[0] == plotagemVertices[1]) {
         			var cor = '#000';
@@ -710,10 +740,12 @@
 		            var ptCircle1 = getPointOnCircle(circle1.r, circle1, circle2);
             		var ptCircle2 = getPointOnCircle(circle2.r, circle2, circle1);
                   	var arestaVerificacao = plotagemVertices[1] + '.' + plotagemVertices[0];
+                  	var arestaParalela = false;
                   	
                   	if (inseridas.indexOf(arestaVerificacao) >= 0){
-                  		y1 += 10;
-                  		y2 += 10;
+                  		arestaParalela = true;
+                  		ptCircle1.y += 10;
+                  		ptCircle2.y += 10;
                   	}
 
                   	var cor = '#000';
@@ -721,6 +753,15 @@
 						cor = '#ff0000';
 
 					if (dirigido) {
+
+						ptCircle1.x += arestaParalela ? 15 : 0;
+						ptCircle2.x += arestaParalela ? 15 : 0;
+						ptCircle1.y += arestaParalela ? 15 : 0;
+						ptCircle2.y += arestaParalela ? 15 : 0;
+
+						var x = (ptCircle1.x + ptCircle2.x) / 2;
+						var y = (ptCircle1.y + ptCircle2.y) / 2;
+
 						$("canvas").drawLine({
 							strokeStyle: cor,
 							strokeWidth: 2,
@@ -729,11 +770,24 @@
 							bringToFront: false,
 							arrowRadius: 10,
 							arrowAngle: 90,
-							x1: ptCircle1.x, 
-							y1: ptCircle1.y,
-							x2: ptCircle2.x, 
-							y2: ptCircle2.y,
-						});
+							x1: ptCircle2.x, 
+							y1: ptCircle2.y,
+							x2: ptCircle1.x, 
+							y2: ptCircle1.y,
+						}).drawArc({
+							strokeStyle: '#FF0000',
+							strokeWidth: 2,
+							x: x, 
+							y: y,
+							radius: 12
+			            }).drawText({
+							fillStyle: "#000",
+							strokeWidth: 2,
+							x: x, 
+							y: y,
+							font: "10pt Verdana, sans-serif",
+							text: peso
+			          	});
 					}else {
 						$("canvas").drawLine({
 							strokeStyle: cor,
@@ -870,6 +924,33 @@
         };
 
         return Math.atan2(interPt.y, interPt.x) * 180 / Math.PI;
+    }
+
+    function Warshall () {
+    	
+    	printMatriz(matrizAdjacencia);
+
+    	var M = new Array(); //Matriz de acessibilidade
+    	for (var k = 0; k < (matrizAdjacencia.length - 1); k++) {
+    		for (var i = 0; i < matrizAdjacencia.length; i++) {
+    			M[i] = new Array();
+    			for (var j = 0; j < matrizAdjacencia.length; j++) {
+    				M[i][j] = matrizAdjacencia[i][j] || (matrizAdjacencia[i][k+1] && matrizAdjacencia[k+1][j]);
+    			}
+    		}
+    	}
+
+    	printMatriz(M);
+    }
+
+    function printMatriz(matriz) {
+    	for (var i = 0; i < matriz.length; i++) {
+    		var linha = '';
+    		for (var j = 0; j < matriz.length; j++) {
+    			linha += matriz[i][j] + '-';	
+    		}	
+    		console.log(linha.substr(0, linha.length - 1));
+    	}
     }
           
 </script>
