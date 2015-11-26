@@ -568,6 +568,7 @@
 					if (arestas.indexOf(aresta2) >= 0)
 						total++;
 				}
+
 				matrizAdjacencia[i][j] = $(':checkbox').is(':checked') ? totalDirigido : total;
 				body += '<td>' + total + '</td>';
 			}
@@ -926,21 +927,22 @@
         return Math.atan2(interPt.y, interPt.x) * 180 / Math.PI;
     }
 
-    function Warshall () {
-    	
-    	printMatriz(matrizAdjacencia);
+    function Acessibilidade() {
 
     	var M = new Array(); //Matriz de acessibilidade
-    	for (var k = 0; k < (matrizAdjacencia.length - 1); k++) {
+    	for (var k = 0; k < matrizAdjacencia.length; k++) {
+    		console.log('k: ' + k);
     		for (var i = 0; i < matrizAdjacencia.length; i++) {
+    			console.log('i: ' + i);
     			M[i] = new Array();
     			for (var j = 0; j < matrizAdjacencia.length; j++) {
+    				console.log('j: ' + j);
     				M[i][j] = matrizAdjacencia[i][j] || (matrizAdjacencia[i][k+1] && matrizAdjacencia[k+1][j]);
     			}
     		}
     	}
 
-    	printMatriz(M);
+    	return M;
     }
 
     function printMatriz(matriz) {
